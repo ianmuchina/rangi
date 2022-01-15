@@ -175,3 +175,9 @@ func getAllThemes() []VsCodeTheme {
 
 	return themes
 }
+
+func ListThemes() {
+	for i, t := range getAllThemes() {
+		fmt.Println(i, t.Name)
+	}
+}

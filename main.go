@@ -22,12 +22,7 @@ func main() {
 		themeMap[t.Name] = t
 	}
 
-	//Test: List all Themes
-	// for _, t := range themes {
-	// fmt.Println(t.Name)
-	// }
-
-	var themeV VsCodeTheme = themes[1]
+	var themeV VsCodeTheme = themes[32]
 
 	//Theme converted to base16
 	var themeB Base16 = vsodeThemeToBase16(themeV)
