@@ -7,6 +7,7 @@ import (
 	"os"
 	"path"
 	"regexp"
+	"strings"
 )
 
 //Extensions that Contain themes
@@ -31,6 +32,11 @@ func getExtensions() []string {
 
 	// Open every extension folder
 	for _, extension := range extensions {
+		//Skip entries that are not folders
+		if !extension.IsDir() {
+			continue
+		}
+
 		// Files contained in extension
 		files, err := os.ReadDir(path.Join(extensionsDir, extension.Name()))
 
@@ -110,6 +116,24 @@ func UncommentJson(buf []byte) []byte {
 // Todo: attach to struct
 func Base16Out(b Base16) string {
 	var result string
+	// Remove hashes from hex value
+	b.Base00 = strings.Replace(b.Base00, "#", "", 1)
+	b.Base01 = strings.Replace(b.Base01, "#", "", 1)
+	b.Base02 = strings.Replace(b.Base02, "#", "", 1)
+	b.Base03 = strings.Replace(b.Base03, "#", "", 1)
+	b.Base04 = strings.Replace(b.Base04, "#", "", 1)
+	b.Base05 = strings.Replace(b.Base05, "#", "", 1)
+	b.Base06 = strings.Replace(b.Base06, "#", "", 1)
+	b.Base07 = strings.Replace(b.Base07, "#", "", 1)
+	b.Base08 = strings.Replace(b.Base08, "#", "", 1)
+	b.Base09 = strings.Replace(b.Base09, "#", "", 1)
+	b.Base0A = strings.Replace(b.Base0A, "#", "", 1)
+	b.Base0B = strings.Replace(b.Base0B, "#", "", 1)
+	b.Base0C = strings.Replace(b.Base0C, "#", "", 1)
+	b.Base0D = strings.Replace(b.Base0D, "#", "", 1)
+	b.Base0E = strings.Replace(b.Base0E, "#", "", 1)
+	b.Base0F = strings.Replace(b.Base0F, "#", "", 1)
+
 	result += fmt.Sprintf("scheme: \"%s\" \n", b.Scheme)
 	result += fmt.Sprintf("type:   \"%s\" \n", b.Type)
 	result += fmt.Sprintf("author: \"%s\" \n", b.Author)
