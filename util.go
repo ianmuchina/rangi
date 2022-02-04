@@ -62,7 +62,8 @@ func getExtensions() []string {
 	return result
 }
 
-func LoadThemeJson(s string) []VsCodeTheme {
+// Unmarshal json theme to  string
+func parseThemes(s string) []VsCodeTheme {
 	var v VsCodeTheme
 	var p PackageJson
 	var result []VsCodeTheme
@@ -176,7 +177,7 @@ func vsodeThemeToBase16(v VsCodeTheme) Base16 {
 func getAllThemes() []VsCodeTheme {
 	var themes []VsCodeTheme
 	for _, i := range getExtensions() {
-		t := LoadThemeJson(i)
+		t := parseThemes(i)
 		themes = append(themes, t...)
 	}
 	return themes
