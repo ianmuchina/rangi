@@ -2,6 +2,9 @@ package main
 
 import (
 	"encoding/json"
+
+	"github.com/tailscale/hujson"
+
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -44,7 +47,34 @@ func getExtensions() []string {
 			os.Exit(1)
 		}
 
+		// Use with the Standard Library
+		//
+		// This package operates with HuJSON as an AST. In order to parse HuJSON
+		// into arbitrary Go types, use this package to parse HuJSON input as an AST,
+		// strip the AST of any HuJSON-specific lexicographical elements, and
+		// then pack the AST as a standard JSON output.
+		//
+		// Example usage:
+		//
+		//	ast, err := hujson.Parse(b)
+		//	if err != nil {
+		//		... // handle err
+		//	}
+		//	ast.Standardize()
+		//	b = ast.Pack()
+		//	if err := json.Unmarshal(b, &v); err != nil {
+		//		... // handle err
+		//	}
+		//
 		var pj PackageJson
+
+		ast, err := hujson.Parse(f)
+		if err != nil {
+			fmt.Println("error unmarshaling package json (hujson)", err)
+			os.Exit(1)
+		}
+		ast.Standardize()
+		f = ast.Pack()
 		err = json.Unmarshal(f, &pj)
 
 		if err != nil {
@@ -84,18 +114,38 @@ func LoadThemeJson(s string) []VsCodeTheme {
 		os.Exit(1)
 	}
 
-	for _, theme := range p.Contributes.Themes {
-		t, err := ioutil.ReadFile(path.Join(s, theme.Path))
+	// Use with the Standard Library
+	//
+	// This package operates with HuJSON as an AST. In order to parse HuJSON
+	// into arbitrary Go types, use this package to parse HuJSON input as an AST,
+	// strip the AST of any HuJSON-specific lexicographical elements, and
+	// then pack the AST as a standard JSON output.
+	//
+	// Example usage:
+	//
 
-		t = UncommentJson(t)
+	for _, theme := range p.Contributes.Themes {
+		var v VsCodeTheme
+		tpath := path.Join(s, theme.Path)
+		t, err := ioutil.ReadFile(tpath)
 
 		if err != nil {
-			fmt.Println("error opening file", t, err)
-
-			os.Exit(1)
+			fmt.Println("error opening theme file", tpath)
+			continue
+		}
+		ast, err := hujson.Parse(t)
+		if err != nil {
+			fmt.Println("error parsing theme file(hujson)", tpath)
+			continue
+		}
+		ast.Standardize()
+		t = ast.Pack()
+		err = json.Unmarshal(t, &v)
+		if err != nil {
+			fmt.Println("error unmarshalling json", tpath)
+			continue
 		}
 
-		var v VsCodeTheme
 		err = json.Unmarshal(t, &v)
 
 		if err != nil {
