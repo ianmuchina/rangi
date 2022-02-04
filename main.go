@@ -43,22 +43,24 @@ func main() {
 
 		out := Base16Out(b)
 
-		fmt.Println(filename)
 		// err := os.Mkdir("./tmp", 0755)
 		// if err != nil {
-		// 	fmt.Printf("error creating folder %w", err)
+		// 	fmt.Print("error creating folder ", err)
 		// }
 
-		err := os.Chdir("/tmp/rangi/")
+		// err := os.Chdir("./tmp/")
 
-		if err != nil {
-			fmt.Println("error changing to folder")
-		}
+		// if err != nil {
+		// 	fmt.Println("error changing to folder")
+		// 	continue
+		// }
 
-		// fmt.Println(filename)
-		err = os.WriteFile(filename, []byte(out), 0644)
+		fmt.Println(filename)
+		err := os.WriteFile(filename, []byte(out), 0644)
 		if err != nil {
 			fmt.Println("error writing", "to", filename)
+		} else {
+			fmt.Println(filename)
 		}
 	}
 

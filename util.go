@@ -38,21 +38,23 @@ func getExtensions() []string {
 		}
 
 		// Files contained in extension
-		files, err := os.ReadDir(path.Join(extensionsDir, extension.Name()))
-
-		//Check Errors
+		f, err := os.ReadFile(path.Join(extensionsDir, extension.Name(), "package.json"))
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println("error opening package json", err)
 			os.Exit(1)
 		}
 
-		//Check if extension has theme folder
-		for _, file := range files {
-			if file.Name() == "themes" {
-				fullPath := path.Join(extensionsDir, extension.Name())
-				result = append(result, fullPath)
+		var pj PackageJson
+		err = json.Unmarshal(f, &pj)
 
-			}
+		if err != nil {
+			fmt.Println("error unmarshaling package json", err)
+			os.Exit(1)
+		}
+		// if extension defines themes
+		if len(pj.Contributes.Themes) > 0 {
+			fullPath := path.Join(extensionsDir, extension.Name())
+			result = append(result, fullPath)
 		}
 	}
 
@@ -88,17 +90,23 @@ func LoadThemeJson(s string) []VsCodeTheme {
 		t = UncommentJson(t)
 
 		if err != nil {
-			fmt.Print(err)
+			fmt.Println("error opening file", t, err)
+
 			os.Exit(1)
 		}
 
 		var v VsCodeTheme
 		err = json.Unmarshal(t, &v)
 
-		result = append(result, v)
 		if err != nil {
-			fmt.Print(err)
-			os.Exit(1)
+			// continue
+			fmt.Println("error parsing json file in ", theme.Path, err)
+			continue
+			// os.Exit(1)
+		} else {
+			v.Name = theme.Label
+			v.Type = theme.UITheme
+			result = append(result, v)
 		}
 
 	}
@@ -204,4 +212,8 @@ func ListThemes() {
 	for i, t := range getAllThemes() {
 		fmt.Println(i, t.Name)
 	}
+}
+
+func removeTrailingComma(s string) string {
+	return "TODO: Implement"
 }

@@ -7,6 +7,7 @@ import (
 
 func TestLoadLinux(t *testing.T) {
 	var arr []VsCodeTheme
+
 	for _, i := range getExtensions() {
 		themes := LoadThemeJson(i)
 
