@@ -8,29 +8,20 @@ import (
 )
 
 func main() {
+	var themes = make(map[string]VsCodeTheme)
 
-	//Map of Theme names to vscode themes
-	var themeMap = make(map[string]VsCodeTheme)
-
-	//Populate Map
-	for _, i := range getExtensions() {
-		t := LoadThemeJson(i)
-		for _, theme := range t {
-			themeMap[theme.Name] = theme
+	for _, extension := range getExtensions() {
+		theme := LoadThemeJson(extension)
+		for _, theme := range theme {
+			themes[theme.Name] = theme
 		}
 	}
 
 	//Iterate over every theme
-	for _, t := range themeMap {
-		var b Base16 = vsodeThemeToBase16(t)
-
+	for _, theme := range themes {
+		var b Base16 = vsodeThemeToBase16(theme)
 		// Make scheme camel case
-
-		b.Scheme = strings.ToLower(b.Scheme)
-
-		scheme := strings.Replace(b.Scheme, " ", "_", -1)
-
-		//detect light mode or dark mode
+		scheme := strings.Replace(strings.ToLower(b.Scheme), " ", "_", -1)
 		if strings.Contains(b.Scheme, "dark") {
 			b.Type = "dark"
 		} else if strings.Contains(b.Scheme, "light") {
@@ -40,21 +31,7 @@ func main() {
 		}
 
 		filename := path.Join(b.Type, fmt.Sprint(scheme, ".yaml"))
-
 		out := Base16Out(b)
-
-		// err := os.Mkdir("./tmp", 0755)
-		// if err != nil {
-		// 	fmt.Print("error creating folder ", err)
-		// }
-
-		// err := os.Chdir("./tmp/")
-
-		// if err != nil {
-		// 	fmt.Println("error changing to folder")
-		// 	continue
-		// }
-
 		fmt.Println(filename)
 		err := os.WriteFile(filename, []byte(out), 0644)
 		if err != nil {
@@ -63,5 +40,4 @@ func main() {
 			fmt.Println(filename)
 		}
 	}
-
 }
