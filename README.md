@@ -1,8 +1,6 @@
 # rangi
 
-A simple go app to create a base16 theme from a vscode theme. 
-
-Not Stable yet. DO NOT USE
+A simple go cli to create a base16 theme from a vscode theme. 
 
 ## TODO
 - [ ] Make it extensible
