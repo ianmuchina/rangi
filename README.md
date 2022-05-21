@@ -1,3 +1,3 @@
 # rangi
 
-A simple go cli to create a base16 theme from a vscode theme. 
+A command line utlity to generate a base16 themes from a vscode themes.
