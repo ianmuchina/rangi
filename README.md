@@ -34,7 +34,7 @@ fv() {
 }
 ```
 
-Script to to display terminal colors. Add it ro your `$PATH` as `term-16-test.sh`
+Script to to display terminal colors. Add it to `$PATH` as `term-16-test.sh`
 
 ```bash
 #!/bin/bash
