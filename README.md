@@ -9,7 +9,21 @@ A command line utlity to generate base16 themes from local vscode themes.
 
 The generated themes are stored at `.local/share/flavours/base16/schemes/vscode/`
 
-Bash function to switch themes.
+
+
+## Screenshots
+
+Monokai Pro
+![image](https://user-images.githubusercontent.com/49595512/169673165-73fb7d89-7d5c-4283-a00d-e2c5f9fb6c62.png)
+Night owl
+![image](https://user-images.githubusercontent.com/49595512/169673192-19dc1976-5ff5-4388-b2f8-0f10701a116a.png)
+Ayu Dark
+![image](https://user-images.githubusercontent.com/49595512/169673242-56665575-cca3-46e6-a85c-fe1c79f36573.png)
+
+
+## Bash aliases
+
+function/alias to switch themes.
 
 ```bash
 #!/bin/bash
@@ -20,7 +34,7 @@ fv() {
 }
 ```
 
-Bash script to to display terminal colors. Add it ro your `$PATH` as `term-16-test.sh`
+Script to to display terminal colors. Add it ro your `$PATH` as `term-16-test.sh`
 
 ```bash
 #!/bin/bash
@@ -42,13 +56,3 @@ for FGs in '    m' '   1m' '  30m' '1;30m' '  31m' '1;31m' '  32m' '1;32m' '  33
 done
 echo
 ```
-
-## Screenshots
-
-Monokai Pro
-![image](https://user-images.githubusercontent.com/49595512/169673165-73fb7d89-7d5c-4283-a00d-e2c5f9fb6c62.png)
-Night owl
-![image](https://user-images.githubusercontent.com/49595512/169673192-19dc1976-5ff5-4388-b2f8-0f10701a116a.png)
-Ayu Dark
-![image](https://user-images.githubusercontent.com/49595512/169673242-56665575-cca3-46e6-a85c-fe1c79f36573.png)
-

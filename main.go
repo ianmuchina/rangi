@@ -38,7 +38,6 @@ func main() {
 
 	for _, theme := range themes {
 		b = theme.ToBase16()
-
 		home, _ := os.UserHomeDir()
 		themeDir := path.Join(home, ".local/share/flavours/base16/schemes/vscode/")
 		themeFile := path.Join(themeDir, b.filename)
@@ -51,6 +50,8 @@ func main() {
 		err = os.WriteFile(themeFile, b.ToYaml(), 0755)
 		if err != nil {
 			log.Fatal(err)
+		} else {
+			fmt.Println(themeFile)
 		}
 	}
 }
@@ -83,7 +84,6 @@ func getExtensions() []string {
 		f, err := os.ReadFile(path.Join(extensionsDir, extension.Name(), "package.json"))
 		if err != nil {
 			continue
-			// fmt.Println("error opening package json", err)
 			// os.Exit(1)
 		}
 		ast, err := hujson.Parse(f)
@@ -105,6 +105,7 @@ func getExtensions() []string {
 			result = append(result, fullPath)
 		}
 	}
+
 	return result
 }
 
@@ -130,11 +131,6 @@ func parseThemes(s string) []VsCodeTheme {
 		themePath := path.Join(s, theme.Path)
 		tmTheme, err := os.ReadFile(themePath)
 
-		// Skip if file is not json
-		if !IsJSON(string(tmTheme)) {
-			continue
-		}
-
 		if err != nil {
 			fmt.Println("error opening theme file", themePath)
 			continue
@@ -142,25 +138,21 @@ func parseThemes(s string) []VsCodeTheme {
 
 		ast, err := hujson.Parse(tmTheme)
 		if err != nil {
-			fmt.Println("error parsing theme file(hujson)", themePath)
 			continue
 		}
 		ast.Standardize()
 		tmTheme = ast.Pack()
 		err = json.Unmarshal(tmTheme, &v)
 		if err != nil {
-			fmt.Println("error unmarshalling json", themePath)
 			continue
 		}
 		err = json.Unmarshal(tmTheme, &v)
 		if err != nil {
-			fmt.Println("error parsing json file in ", theme.Path, err)
 			continue
-		} else {
-			v.Name = theme.Label
-			v.Type = theme.UITheme
-			result = append(result, v)
 		}
+		v.Name = theme.Label
+		v.Type = theme.UITheme
+		result = append(result, v)
 	}
 	return result
 }
@@ -193,40 +185,40 @@ func (v VsCodeTheme) ToBase16() Base16 {
 		v.Type = "dark"
 	}
 
+	fg := v.Colors.Foreground
+
+	if len(v.Colors.EditorForeground) > len(v.Colors.Foreground) {
+		fg = v.Colors.EditorForeground
+	}
 	var b Base16
 	b.Scheme = v.Name
 	b.Type = v.Type
 	b.Author = "Anon"
 	b.Base00 = v.Colors.EditorBackground
 	b.Base01 = v.Colors.EditorBackground
-	b.Base02 = v.Colors.TerminalAnsiBlack
-	b.Base03 = v.Colors.TerminalAnsiBrightBlack
-	b.Base04 = v.Colors.EditorForeground
-	b.Base05 = v.Colors.EditorForeground
-	b.Base06 = v.Colors.EditorForeground
-	b.Base07 = v.Colors.EditorForeground
-	b.Base08 = v.Colors.TerminalAnsiBrightRed
-	b.Base09 = v.Colors.TerminalAnsiBrightYellow
-	b.Base0A = v.Colors.TerminalAnsiBrightYellow
-	b.Base0B = v.Colors.TerminalAnsiBrightGreen
-	b.Base0C = v.Colors.TerminalAnsiBrightCyan
-	b.Base0D = v.Colors.TerminalAnsiBrightBlue
-	b.Base0E = v.Colors.TerminalAnsiBrightMagenta
-	b.Base0F = v.Colors.ErrorForeground
+	b.Base02 = v.Colors.EditorBackground
+	b.Base03 = v.Colors.EditorBackground
+	b.Base04 = fg
+	b.Base05 = fg
+	b.Base06 = fg
+	b.Base07 = fg
+	b.Base08 = v.Colors.TerminalAnsiRed
+	b.Base09 = v.Colors.TerminalAnsiYellow
+	b.Base0A = v.Colors.TerminalAnsiYellow
+	b.Base0B = v.Colors.TerminalAnsiGreen
+	b.Base0C = v.Colors.TerminalAnsiCyan
+	b.Base0D = v.Colors.TerminalAnsiBlue
+	b.Base0E = v.Colors.TerminalAnsiMagenta
+	b.Base0F = v.Colors.TerminalAnsiRed
 
 	// Generate filename
-
 	// Convert to lowercase
 	scheme := strings.ToLower(b.Scheme)
 	// Replace spaces with underscores
 	scheme = strings.ReplaceAll(scheme, " ", "_")
+	scheme = strings.ReplaceAll(scheme, "'", "")
 	// Generate filename
 	b.filename = v.Type + "_" + scheme + "_vscode" + ".yaml"
 
 	return b
-}
-
-func IsJSON(str string) bool {
-	var js json.RawMessage
-	return json.Unmarshal([]byte(str), &js) == nil
 }

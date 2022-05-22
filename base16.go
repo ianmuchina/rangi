@@ -38,6 +38,5 @@ func (b Base16) ToYaml() []byte {
 }
 
 func (b Base16) ToYamlString() string {
-
 	return string(b.ToYaml())
 }
