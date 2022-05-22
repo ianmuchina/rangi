@@ -5,7 +5,7 @@ A command line utlity to generate base16 themes from local vscode themes.
 
 ## Dependencies
 
-- [flavors](https://github.com/Misterio77/flavours) - cli to apply base16  the themes
+- [flavors](https://github.com/Misterio77/flavours) - cli to apply base16 themes
 - fzf - for the interactive command
 
 The generated themes are stored at `.local/share/flavours/base16/schemes/vscode/`
