@@ -17,13 +17,6 @@ type Config struct {
 	base16ThemePrefix string
 }
 
-func foo() {
-	// List all extensions
-	// Get extensions with theme
-	// Read theme data
-	// Unmarshal theme data to struct
-}
-
 func main() {
 	var themes = make(map[string]VsCodeTheme)
 	var b Base16
